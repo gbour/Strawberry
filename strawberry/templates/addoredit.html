@@ -1,0 +1,90 @@
+<%doc>
+	Copyright (C) 2010-2011, Guillaume Bour <guillaume@bour.cc>
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as
+	published by the Free Software Foundation, version 3.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
+
+	You should have received a copy of the GNU Affero General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+</%doc>
+
+<%! import strawberry %>
+<%inherit file="base.html" />
+<%def name="title()">strawberry :: ${'Edit '+str(values.get('name','')) if mode == 'edit' else 'Add a link'}</%def>
+
+<%def name="head()">
+<a id="alltags" href="${url(strawberry)}">All Tags</a>
+</%def>
+
+<%def name="content()">
+	<div id="newlink">
+		<% act = url(strawberry.Link, id=values['id']) if 'id' in values else	url(strawberry.Link.html_add) %>
+		<form id="main_form" action="${act}" method="POST">
+			<input type="hidden" name="referer" value="${referer}" /> 
+
+			<label for="link">url</label>
+			<input name="link"  type="text" value="${values.get('link','Enter/Paste your url')}" 
+			       class="${'error' if 'link' in errors else ''}" cleared='0'
+						 onfocus="onfocusdo(this);" />
+			% if 'link' in errors:
+			<span class="warning">${errors['link'][1]}</span>
+			% endif
+			<br/>
+
+			<label for="name">name</label>
+			<input name="name" type="text" value="${values.get('name','Enter/Paste url name')}" 
+			       class="${'error' if 'name' in errors else ''}" cleared='0' 
+             onfocus="onfocusdo(this);" />
+			% if 'name' in errors:
+			<span class="warning">${errors['name'][1]}</span>
+			% endif
+			<br/>
+
+			<label for="description">description</label>
+			<textarea name="description" rows="5" cols="20" cleared="0"	onfocus="onfocusdo(this);">${values.get('description','Enter your description here')}</textarea><br/>
+
+			<label for="tags">tags</label>
+			<fieldset>
+				<select name="tags" multiple>
+					<option value="nop" selected>-- choose one or more tag(s) --</option>
+					<% selected = values.get('tags',[]) %>
+					%	for tag in tags:
+					<%
+							sel = ''
+							if tag.name in selected:
+								selected.remove(tag.name); sel='selected'
+					%>
+					<option value="${tag.name}" ${sel}>${tag.name}</option>
+					% endfor
+				</select>
+				% if 'tags' in errors:
+					<span class="warning warning-select">${errors['tags'][1]}</span>
+				% endif
+				<br/>
+
+				<input name="tags" type="text" 
+				       value="${selected.pop() if len(selected) > 0 else 'or enter new one(s)'}"
+							 cleared='0' onfocus="onfocusdo(this);" /><br/>
+				% for i in xrange(3):
+				<input name="tags" type="text" 
+				       value="${selected.pop() if len(selected) > 0 else ''}" /><br/>
+				% endfor
+				
+			</fieldset>
+			<input type="submit" value="${'Save' if mode == 'edit' else 'Add'}">
+	</form>
+</div>
+</%def>
+
+<%def name="tail()">
+	% if mode == 'edit':
+	<a id="addlink" href="${url(strawberry.Link.html_add)}">Add a link</a>
+	% endif
+</%def>
+

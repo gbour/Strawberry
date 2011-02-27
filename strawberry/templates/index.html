@@ -1,0 +1,70 @@
+<%doc>
+	Copyright (C) 2010-2011, Guillaume Bour <guillaume@bour.cc>
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as
+	published by the Free Software Foundation, version 3.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
+
+	You should have received a copy of the GNU Affero General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+</%doc>
+
+<%! import strawberry %>
+<%inherit file="base.html" />
+
+<%def name="title()">strawberry :: all tags</%def>
+
+<%def name="headers()">
+	<script src="${url(strawberry.style)}/jquery.js"></script>
+</%def>
+
+
+<%def name="content()">
+	<div id="search">
+		<form action="#" base-acti .n="${url(strawberry.search, q=None)}" method="GET">
+			search: 
+			<input type="text" name="q"/>
+		</form>
+	</div>
+	
+	
+	<ul class="tagcloud">
+	% for tag in tags:
+		% if len(tag.Link__tags) == 0:
+			<li class="size0">
+		% else:
+			<li class="size${len(tag.Link__tags)}">
+		% endif
+		<%
+			linkname = tag.name
+			if ' ' in linkname:
+				linkname = '"'+linkname+'"'
+		%>
+		<a href="${url(strawberry.Tag, linkname)}" title="#${len(tag.Link__tags)} links">${tag.name}</a></li>
+	% endfor
+	</ul>
+</%def>
+
+<%def name="tail()">
+	<a id="addlink" href="${url(strawberry.Link.html_add)}">Add a link</a>
+</%def>
+
+<%def name="footer()">
+	<script type="text/javascript">
+		$(document).ready(function() {
+				$("#search form").submit(function(evt) {
+					console.log($(evt.target).attr('base-action'));
+					evt.target.action = $(evt.target).attr('base-action') + $("#search input:first").val();
+					$("#search input:first").val('');
+					$(evt.target).empty();
+					console.log(evt.target.action);
+					return true;
+				});
+		});
+	</script>
+</%def>

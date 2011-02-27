@@ -1,7 +1,4 @@
-# -*- coding: utf8 -*-
-__version__ = "$Revision$ $Date$"
-__author__  = "Guillaume Bour <guillaume@bour.cc>"
-__license__ = """
+<%doc>
 	Copyright (C) 2010-2011, Guillaume Bour <guillaume@bour.cc>
 
 	This program is free software: you can redistribute it and/or modify
@@ -15,29 +12,23 @@ __license__ = """
 
 	You should have received a copy of the GNU Affero General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
-import sqlite3, cgi
-from mother.callable import Callable, callback
-from tag  import *
-from link import *
+</%doc>
 
+<%! import strawberry %>
+<%inherit file="base.html" />
 
-class Strawberry(Callable):
-	def __init__(self, db=None, context=None):
-		self.db	 = db
-		#db.create()
+<%def name="title()">strawberry :: 404</%def>
 
-		# create default link
-		try:
-			Link(
-				link = 'http://devel.bour.cc/strawberry',
-				name = 'strawberry project home page',
-				stars = 5,
-				valid = True,
-				
-				tags  = [Tag(id=1, name='bookmarks service')],
-			).save()
-		
-		except Exception, e:
-			print e
+<%def name="head()">
+	<a id="alltags" href="${url(strawberry)}">All Tags</a>
+</%def>
 
+<%def name="content()">
+	<p class="c404">404 - page not found</p>
+</%def>
+
+<%def name="tail()">
+<% 
+	#a id="back" href="${url(strawberry)}">Index</a 
+%>
+</%def>

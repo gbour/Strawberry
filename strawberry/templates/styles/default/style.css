@@ -1,0 +1,454 @@
+/*@charset "utf8";*/
+/*
+	Copyright (C) 2010-2011, Guillaume Bour <guillaume@bour.cc>
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as
+	published by the Free Software Foundation, version 3.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
+
+	You should have received a copy of the GNU Affero General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+html {
+	height: 100%;
+}
+
+body {
+  	margin: 0px;
+	padding: 0px;
+	border: 0px;
+  
+/*	height: 100%;*/
+/*	font: 100% Verdana, Geneva, Arial, Helvetica, "Bitstream Vera Sans", sans-serif;*/
+}
+
+h1 {
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+
+	padding-left: 15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	/*margin-top: 20px;*/
+        margin-top: 40px;
+	margin-bottom: 10px;
+	color: #ffffff;
+
+	background-color: #000000;
+	border: 1px solid #000000;
+}
+
+h1:before {
+	content: '» ';
+}
+
+div#search {
+	/*position: absolute;*/
+	position: relative;
+	right: 3px;
+	top: -36px;
+	text-align: right;
+
+	margin: 0px;
+	padding: 0px;
+/*	padding-right: 20px;*/
+/*	border: 1px solid black;*/
+	color: #ffffff;
+	font-size: x-small;
+}
+
+img#icon {
+	position: absolute;
+	right: 3px;
+	top: 10px;
+	border: 0px;
+}
+
+div#search input {
+	border: 1px solid black;
+	background-color: #ffffff;
+	opacity: 0.7;
+	-khtml-opacity: 0.7;
+	/*font-family:"trebuchet ms",sans-serif;*/
+	color: black;
+}
+
+ul.tagcloud {
+	width: 90%;
+	margin: 0px;
+	padding: 0px;
+
+	margin-left: 30px;
+	padding-left: 5px;
+	margin-bottom: 30px;
+
+	/*border: 1px solid black;*/
+	border-left: 3px solid black;
+}
+		
+ul.tagcloud > li {
+	display: inline;
+	list-style-type: none;
+}
+
+ul.tagcloud > li.size0 {
+	font-size: xx-small;
+	color: #d9d9d9;
+}
+		
+ul.tagcloud > li.size1 {
+	font-size: xx-small;
+}
+
+ul.tagcloud > li.size2 {
+	font-size: x-small;
+}
+
+ul.tagcloud > li.size3 {
+	font-size: small;
+}
+
+ul.tagcloud > li.size4 {
+	font-size: medium;
+}
+
+ul.tagcloud > li.size5 {
+	font-size: large;
+}
+
+ul.tagcloud > li.size6 {
+	font-size: x-large;
+}
+
+ul.tagcloud > li.size7 {
+	font-size: xx-large;
+}
+		
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+ul.tagcloud a:hover {
+	text-decoration: underline;
+}
+
+div.tag_links {
+	margin: 0px;
+	padding: 0px;
+	width: 80%;
+	float: left;
+
+/*	border: 1px solid black;	*/
+}
+
+div.tag_links > ul {
+	/*width: 90%;*/
+	margin: 0px;
+	padding: 0px;
+
+	margin-left: 30px;
+	padding-left: 5px;
+	margin-bottom: 30px;
+
+	list-style: none;
+}
+	
+div.tag_links > ul > li {
+/*	width: 100%;*/
+	margin-bottom: 10px;
+	min-height: 33px;
+	
+/*	float: left;*/
+/*	width: 30%;
+*/
+}
+
+div.tag_links > ul > li > div {
+	float: left;
+}
+
+div.tag_links > ul > li > div > a:hover:before {
+	content: '» ';
+}
+
+div.tag_links > ul > li > div > a:hover {
+	font-weight: bold;
+}
+
+li.hover > div > a:before {
+	content: '» ';
+}
+
+li.hover > div > a {
+	font-weight: bold;
+}
+
+
+div.tag_links > ul > li > div > a.error:hover:before {
+	content: '';
+}
+
+div.tag_links > ul > li > div > p {
+	margin: 0px;
+	border: 0px;
+
+	font-size: x-small;
+	margin-left: 30px;
+}
+
+div.tag_links > ul > li ul.actions {
+	float: right;
+}
+
+div.tag_links > ul > li ul.actions > li {
+	display: inline;
+	list-style-type: none;
+}
+
+div.tag_links > ul > li ul.actions img {
+	border: 0px;
+}
+
+
+
+div.z {
+/*	float: left;*/
+}
+
+div.related {
+	float: right;
+	margin: 0px;
+	padding: 0px;
+/*	border: 1px solid black;*/
+	width: 19%;
+}
+
+div.related > ul {
+	margin: 0px;
+	padding: 0px;
+	
+	padding-left: 10px;
+
+	list-style: none;
+	font-size: small;
+}
+
+div.related > ul > li > a {
+	margin: 0px;
+	padding: 0px;
+
+	font-size: x-small;
+/*	border: 1px solid black;*/
+}
+
+br.clear {
+	clear: both;
+}
+
+div#newlink {
+	border-left: 3px solid black;
+	margin-left: 30px;
+	padding-left: 10px;
+        margin-bottom: 10px;
+}
+
+div#newlink > form#main_form label {
+	text-align:right;
+	min-width:100px;
+	float:left;
+	margin-right: 10px;
+}
+
+div#newlink > form#main_form input {
+	border: 1px solid black;
+	background-color: white;
+	color: black;
+
+	margin-bottom: 5px;
+	padding-left: 3px;
+	padding-right: 3px;
+
+	min-width: 400px;
+}
+
+
+div#newlink > form#main_form textarea {
+	border: 1px solid black;
+	background-color: white;
+	color: black;
+
+	margin-bottom: 5px;
+	padding-left: 3px;
+	padding-right: 3px;
+
+	min-width: 400px;
+}
+
+div#newlink > form#main_form select {
+	border: 1px solid black;
+	background-color: white;
+	color: black;
+
+	margin-bottom: 5px;
+	padding-left: 3px;
+	padding-right: 3px;
+
+	min-width: 392px;
+}
+
+
+div#newlink > form#main_form fieldset {
+	margin: 0px;
+	padding: 0px;
+
+	border: 0px;
+}
+
+div#newlink ul#tags_list {
+	/*width: 90%;*/
+	/*right: 500px;*/
+	min-width: 600px;
+	min-height: 200px;
+	margin: 0px;
+	margin-right: 10px;
+	padding: 5px;
+
+	border: 1px solid black;
+	visibility: hidden;
+}
+
+div#newlink ul#tags_list input {
+	margin-bottom: 0px;
+	min-width: 150px;
+}
+
+div#newlink ul#tags_list > li {
+	display: inline;
+	list-style-type: none;
+		
+	margin-right: 10px;
+}
+
+div#newlink ul#tags_list > li.selected {
+/*	background-color: #ff0000;*/
+	color: #ff0000;
+	font-weight: bold;
+}
+
+div#newlink ul#tags_list > li > input {
+	width: 100px;
+}
+
+div#newlink > form#main_form input[type="submit"] {
+/*	background-color: black;
+	color: white;*/
+	margin: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	min-width: 50px;
+
+	border-left: 3px solid black;
+	text-align: center;
+}
+
+div#newlink > form#main_form input[type="submit"]:hover {
+	font-weight: bold;
+	cursor: pointer;
+}
+
+div#newlink > form#main_form .error {
+	background-color: #ff5757;
+}
+
+a#addlink { 
+	font-size: small;
+	margin: 10px;
+}
+
+a#addlink:before { 
+	/* URL is relative to this file */
+	content: url('ressources/add.png');
+	margin-right: 5px;
+}
+
+a#addlink:hover { 
+        font-style: italic;
+		/*font-weight: bold;*/
+}
+
+a#alltags { 
+        font-size: small;
+/*        font-style: italic;*/
+        margin: 5px;
+
+ /*       float: left;*/
+        position: absolute;
+        top: 0px;
+}
+
+a#alltags:hover { 
+        font-style: italic;
+}
+
+a#alltags:before { 
+        content: '« ';
+}
+
+div#copyright { 
+        font-size: x-small;
+/*        float: right;*/
+        margin: 5px;
+		margin-top: 20px;
+        /*position: absolute;*/
+        right: 0px;
+        bottom: 0px;
+		text-align: right;
+}
+
+p {
+	margin: 30px;
+	margin-left: 30px;
+}
+
+.warning {
+	font-size: .7em;
+}
+
+.warning:before {
+	content: url('ressources/warning.png') " ";
+}
+
+.warning-select {
+	vertical-align: top;
+}
+
+.c404 {
+	font-size: 2em;
+	text-align: center;
+	margin: 8em;
+}
+
+.c404:first-letter {
+	font-size: 3em;
+}
+
+
+a#back { 
+	font-size: small;
+	margin: 10px;
+}
+
+a#back:before { 
+	/* URL is relative to this file */
+	content: '«';
+	margin-right: 5px;
+}

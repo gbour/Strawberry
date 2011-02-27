@@ -1,0 +1,132 @@
+<%doc>
+	Copyright (C) 2010-2011, Guillaume Bour <guillaume@bour.cc>
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as
+	published by the Free Software Foundation, version 3.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
+
+	You should have received a copy of the GNU Affero General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+</%doc>
+
+<%! import strawberry %>
+<%inherit file="base.html" />
+<%def name="title()">strawberry :: tag «${tagname}»</%def>
+
+<%def name="headers()">
+	<script src="${url(strawberry.style)}/jquery.js"></script>
+</%def>
+
+<%def name="head()">
+	<a id="alltags" href="${url(strawberry)}">All Tags</a>
+</%def>
+
+<%def name="content()">
+	<div class="tag_links">	
+		<ul>
+		% for link in links:
+			<li>
+				<div>
+					<a href="${link.link}">${link.name}</a>
+					<p>${link.description or '&nbsp'}</p>
+				</div>
+
+				<ul class="actions">
+					<li><a href="${url(strawberry.Link, link.id)}">
+						<img src="${url(strawberry.style)}/ressources/edit.png" alt="edit" title="edit"/>
+				</a></li>
+				</ul>
+				<br class="clear" />
+			</li>
+		% endfor
+		</ul>	
+	</div>
+
+	<div class="related">
+		Related:
+		<%
+			def tags2url(tags, but=None):
+				href = ''.join([t.sign+t.name for t in tags if t is not but])
+				if href[0] == '+':
+					href = href[1:]
+			
+				return href
+
+			title = {
+				'+': '+ Append tag',
+				'-': '- Substract tag'
+				}
+		%>
+		<ul>
+		% for tag in tags:
+			<li>
+				<% tag.sign = '+' if tag.sign == '-' else '-'	%>		
+				<a title="${title[tag.sign]}"	href="${url(strawberry.search, q=tags2url(tags))}">${tag.sign}</a>
+				% if len(tags) > 1:
+				<a title="&oslash Remove tag"	href="${url(strawberry.search, q=tags2url(tags, tag))}">&oslash;</a>
+				<a title="= Replace tag" 	  href="${url(strawberry.search, q=tag.name)}">=</a>
+				% endif
+				${tag.name}
+				<%
+					# restore value
+					tag.sign = '+' if tag.sign == '-' else '-'
+				%>		
+			</li>		
+		% endfor
+			<li><hr/></li>
+		% for tag in related:
+			<li>
+				<%
+					_tags = list(tags)
+					_tags.append(tag)
+					_tags.sort(key=lambda t: t.name)
+
+					tag.sign = '+'
+				%>
+				<a title="+ Append tag"    href="${url(strawberry.search, q=tags2url(_tags))}">+</a>
+				<% tag.sign = '-' %>
+				<a title="- Substract tag"    href="${url(strawberry.search, q=tags2url(_tags))}">-</a>
+				<a title="= Replace tag"   href="/strawberry/tag/${tag.name}">=</a>
+				
+				${tag.name}
+			</li>
+		% endfor
+		</ul>
+	</div>
+<br class="clear"/>	
+</%def>
+
+<%def name="tail()">
+	<a id="addlink" href="${url(strawberry.Link.html_add, tags=[t.name for t in tags if t.sign == '+'])}">Add a link</a>
+</%def>
+
+<%def name="footer()">
+	<script type="text/javascript">
+		$(document).ready(function() {
+				$("li:first").addClass('hover');
+				$("li.hover a:first").focus();
+				
+				$(document).keyup(function(evt) {
+					if(evt.keyCode == 40 || evt.keyCode == 38)
+					{
+						var item = $("li.hover");
+						var peer = evt.keyCode == 40?item.next():item.prev();
+
+						if(peer.length == 1)
+						{
+							item.removeClass('hover');
+							peer.addClass('hover');
+
+							//peer[0].focus();
+							$("li.hover a:first").focus();
+						}
+					}
+				});
+		});
+	</script>
+</%def>
