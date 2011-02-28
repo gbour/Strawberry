@@ -260,6 +260,11 @@ div#newlink {
         margin-bottom: 10px;
 }
 
+
+div#newlink > form#main_form .clear-default {
+	color: #cfcfcf;
+}
+
 div#newlink > form#main_form label {
 	text-align:right;
 	min-width:100px;

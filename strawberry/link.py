@@ -59,7 +59,7 @@ class Link(Object, Callable):
 
 		return Template('addoredit.html',
 			title='Edit &#9732; '+ str(values['name']),
-			tags=list(BaseQuerySet(Tag)),
+			tags=list(BaseQuerySet(Tag) >> 'name'),
 			values=values,
 			mode='edit',
 			referer='' if __referer__ == None else __referer__,
@@ -130,7 +130,7 @@ class Link(Object, Callable):
 
 		return Template('addoredit.html',
 			title="Add a link",
-			tags=list(BaseQuerySet(Tag)),
+			tags=list(BaseQuerySet(Tag) >> 'name'),
 			values=kwargs,
 			mode='add',
 			referer='' if __referer__ is None else __referer__,

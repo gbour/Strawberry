@@ -26,8 +26,6 @@ from tag             import *
 from link            import *
 from strawberry      import *
 
-from mobile          import Mobile
-
 AUTHENTICATION = False
 # __name__ is current module name
 

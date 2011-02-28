@@ -18,6 +18,18 @@
 <%inherit file="base.html" />
 <%def name="title()">strawberry :: ${'Edit '+str(values.get('name','')) if mode == 'edit' else 'Add a link'}</%def>
 
+<%def name="headers()">
+	<script type="text/javascript" src="${url(strawberry.style)}/jquery.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('form#main_form .clear-default').focusin(function(e) {
+				$(e.target).attr('value','').removeClass('clear-default');
+			});
+		});
+	</script>
+</%def>
+
 <%def name="head()">
 <a id="alltags" href="${url(strawberry)}">All Tags</a>
 </%def>
@@ -29,29 +41,43 @@
 			<input type="hidden" name="referer" value="${referer}" /> 
 
 			<label for="link">url</label>
-			<input name="link"  type="text" value="${values.get('link','Enter/Paste your url')}" 
-			       class="${'error' if 'link' in errors else ''}" cleared='0'
-						 onfocus="onfocusdo(this);" />
+			<%
+				default = ''
+				link = values.get('link', None)
+				if link is None:
+					link = 'Enter/Paste your url'; default = 'clear-default'
+			%>
+			<input name="link"  type="text" value="${link}" tabindex=1
+			 			 class="${default} ${'error' if 'link' in errors else ''}" />
 			% if 'link' in errors:
 			<span class="warning">${errors['link'][1]}</span>
 			% endif
 			<br/>
 
 			<label for="name">name</label>
-			<input name="name" type="text" value="${values.get('name','Enter/Paste url name')}" 
-			       class="${'error' if 'name' in errors else ''}" cleared='0' 
-             onfocus="onfocusdo(this);" />
+			<%
+				name = values.get('name',None); default = ''
+				if name is None:
+					name = 'Enter/Paste url name'; default='clear-default'
+			%>
+			<input name="name" type="text" value="${name}" tabindex=2
+				     class="${default} ${'error' if 'name' in errors else ''}" />
 			% if 'name' in errors:
 			<span class="warning">${errors['name'][1]}</span>
 			% endif
 			<br/>
 
 			<label for="description">description</label>
-			<textarea name="description" rows="5" cols="20" cleared="0"	onfocus="onfocusdo(this);">${values.get('description','Enter your description here')}</textarea><br/>
+			<%
+				desc = values.get('description',None); default = ''
+				if desc is None:
+					desc = 'Enter your description here'; default = 'clear-default'
+			%>
+			<textarea name="description" rows="5" cols="20" class="${default}" tabindex=3>${desc}</textarea><br/>
 
 			<label for="tags">tags</label>
 			<fieldset>
-				<select name="tags" multiple>
+				<select name="tags" multiple tabindex=4>
 					<option value="nop" selected>-- choose one or more tag(s) --</option>
 					<% selected = values.get('tags',[]) %>
 					%	for tag in tags:
@@ -68,12 +94,15 @@
 				% endif
 				<br/>
 
-				<input name="tags" type="text" 
-				       value="${selected.pop() if len(selected) > 0 else 'or enter new one(s)'}"
-							 cleared='0' onfocus="onfocusdo(this);" /><br/>
+				<%
+					if len(selected) > 0:
+						sel = selected.pop(); default = ''
+					else:
+						sel = 'or enter new one(s)'; default = 'clear-default'
+				%>
+				<input name="tags" type="text" value="${sel}" class="${default}" tabindex=5 /><br/>
 				% for i in xrange(3):
-				<input name="tags" type="text" 
-				       value="${selected.pop() if len(selected) > 0 else ''}" /><br/>
+				<input name="tags" type="text" value="${selected.pop() if len(selected) > 0 else ''}" tabindex=${i+5} /><br/>
 				% endfor
 				
 			</fieldset>
