@@ -1,0 +1,42 @@
+
+A. BUGS
+ . crash if using utf8 characters in name a/o tags (wikipædia)
+ . search function do not work (remove console.log() at first)
+
+B. FEATURES
+. favicon
+. debian package
+. i18n
+. add/edit page
+  - set default focus to url input field
+	- set default text (url,name,description) in lightgrey
+  - delete default text on focus
+  - description: allow html/markdown/whatever syntax, formating helper
+  - url: after entering url, query it
+    . onload animated picture
+    . set a warning if we can't retrieve url
+    . pre-fill name, description, tags fields with page meta-headers
+    . get/store site favicon
+  - tags: sort alphabetically
+  - tags: ajax field (see old version)
+
+. tag page
+  . selected tags appear in black bar: allow clicking on tag to change sign/remove tag instead of placing at right
+  . description: put '...' if too long (with a 'show all' button)
+
+. "discrete" mode (hide a set of *special* tags)
+. per-user tags/links
+. shared links (to all/some users)
+. count numbers of clics for an url (using redirector or javascript event catcher)
+    . possibility to sort urls per click
+. anonymous clic (remove referer)
+. design: move 'add a link' just upon, overlapping black bar
+. associate icon with tags
+. group tags (lang:en, lang:fr)
+. add 'delete link' button (with confirmation)
+. advanced tag cloud
+. firefox plugin
+. mobile version
+. get site preview image
+. search field may appear on all pages
+
