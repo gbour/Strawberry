@@ -55,10 +55,9 @@ class Link(Object, Callable):
 		# call original callback
 		values = __callback__(**kwargs)
 		values['tags'] = values['tags'].keys()
-		print values
 
 		return Template('addoredit.html',
-			title='Edit &#9732; '+ str(values['name']),
+			title='Edit &#9732; ' + values['name'],
 			tags=list(BaseQuerySet(Tag) >> 'name'),
 			values=values,
 			mode='edit',

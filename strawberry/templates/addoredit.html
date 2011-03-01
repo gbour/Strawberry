@@ -16,7 +16,7 @@
 
 <%! import strawberry %>
 <%inherit file="base.html" />
-<%def name="title()">strawberry :: ${'Edit '+str(values.get('name','')) if mode == 'edit' else 'Add a link'}</%def>
+<%def name="title()">strawberry :: ${'Edit '+values.get('name','') if mode == 'edit' else 'Add a link'}</%def>
 
 <%def name="headers()">
 	<script type="text/javascript" src="${url(strawberry.style)}/jquery.js"></script>
@@ -37,7 +37,7 @@
 <%def name="content()">
 	<div id="newlink">
 		<% act = url(strawberry.Link, id=values['id']) if 'id' in values else	url(strawberry.Link.html_add) %>
-		<form id="main_form" action="${act}" method="POST">
+		<form id="main_form" accept-charset="utf-8" action="${act}" method="POST">
 			<input type="hidden" name="referer" value="${referer}" /> 
 
 			<label for="link">url</label>
