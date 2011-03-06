@@ -19,7 +19,7 @@ __license__ = """
 UUID = '554495b2-497a-4835-8786-a6b870815313'
 
 from mother.template import Static, Template
-from mother.routing  import ROOT, HTTP_404, HTTP_401, HTTP_403, LOGIN, LOGOUT
+from mother          import routing
 
 from tentacles.queryset import filter, BaseQuerySet
 from tag             import *
@@ -95,11 +95,10 @@ def search(q, **kwargs):
 
 
 URLS = {
-	ROOT                 : root,
-	HTTP_404             : Template('404.html', title='404'),
+	routing.ROOT         : root,
+	routing.HTTP_404     : Template('404.html', title='404'),
 
 	#TODO: accept notation with or without heading '/'
 	'/style'             : Static('templates/styles/default', name='style'),
 }
-
 

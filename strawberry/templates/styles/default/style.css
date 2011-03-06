@@ -261,6 +261,20 @@ div#newlink {
 }
 
 
+div#newlink > form#main_form input[name=link].icon {
+	background-size: 14px;
+	-moz-background-size: 14px;
+
+	padding-left: 18px;
+	min-width: 385px;
+}
+
+div#newlink > form#main_form input[name=link].load {
+	background: url('ressources/loading.gif') no-repeat center left;
+	background-size: 14px;
+	-moz-background-size: 14px;
+}
+
 div#newlink > form#main_form .clear-default {
 	color: #cfcfcf;
 }

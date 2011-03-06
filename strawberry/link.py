@@ -16,9 +16,12 @@ __license__ = """
 	You should have received a copy of the GNU Affero General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+import urllib2, urlparse
+from   BeautifulSoup         import BeautifulSoup as soup
+
 from twisted.web             import server
 from mother.callable         import Callable, callback, LoopbackSelf as self
-from mother                  import routing
+from mother                  import routing, modifiers
 
 from tentacles               import *
 from tentacles.fields        import *
@@ -55,6 +58,9 @@ class Link(Object, Callable):
 		# call original callback
 		values = __callback__(**kwargs)
 		values['tags'] = values['tags'].keys()
+		print values['name'], type(values['name'])
+		print values['name'].encode('ascii','replace')
+		#values['name'] = 'plop'
 
 		return Template('addoredit.html',
 			title='Edit &#9732; ' + values['name'],
@@ -363,3 +369,54 @@ class Link(Object, Callable):
 		def post(self):
 			return 'post add'
 	"""
+
+	@callback(content_type='application/json', modifiers={'application/json': modifiers.json})
+	def metadatas(self, url, __context__, **kwargs):
+		"""Load requested website in background to extract  usefule informations,
+			as title, meta headers, favicon, page snapshot, ...
+
+			We act as a proxy using client headers
+		"""
+		# we filter headers
+		headers = __context__.getAllHeaders()
+		for k in headers.keys():
+			if k not in ('accept-language','accept-encoding','accept','user-agent'):
+				del headers[k]
+
+		req = urllib2.Request(url) #.encode('utf8')), headers=headers)
+		try:
+			f = urllib2.urlopen(req)
+		except urllib2.HTTPError, e:
+			return getattr(routing, 'HTTP_'+str(e.code))
+		except urllib2.URLError, e:
+			return routing.HTTP_503
+		except ValueError:
+			return routing.HTTP_400
+
+		tree = soup(f.read())
+
+		# we get interesting datas to return
+		infos = {'title': tree.html.head.title.string.strip()}
+
+		for meta in ('description', 'keywords'):
+			value = tree.html.head.findAll('meta', attrs={'name': meta})
+			if len(value) > 0:
+				infos[meta] = value[0]['content']
+	
+		if 'keywords' in infos:
+			infos['keywords'] = [i.strip() for i in	infos['keywords'].split(',')]
+
+		# icon
+		# <link rel="icon" href="/chrome/common/trac.ico" type="image/x-icon" />
+		icon = [l['href'] for l in tree.html.head.findAll('link') if l['rel'].lower() in ('icon', 'shortcut icon')]
+		if len(icon) > 0:
+			icon = icon[0]
+
+			_icon = urlparse.urlsplit(icon)
+			if _icon.scheme == '': # relative url
+				icon = urlparse.urljoin(url, icon)
+
+			infos['icon'] = icon
+
+		return infos
+

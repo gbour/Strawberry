@@ -24,8 +24,33 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('form#main_form .clear-default').focusin(function(e) {
-				$(e.target).attr('value','').removeClass('clear-default');
+				$(e.target).attr('value','').removeClass('clear-default').unbind('focusin');
 			});
+
+			$('input[name=link]').focusout(function(e) {
+				$.get("${url(strawberry.Link.metadatas, url='')}"+$(e.target).attr('value'), function(data) {
+					$(e.target).removeClass('load')
+					console.log(data);
+					if(data.icon != undefined)
+						$(e.target).css({
+							'background': 'url("'+data.icon+'") no-repeat top left',
+							'-moz-background-size': '16px'
+						});
+
+					$input = $('input[name=name]');
+					if(data.title != undefined && ($input.hasClass('clear-default') || $input.attr('value').length == 0))
+						$input.attr('value', data.title).removeClass('clear-default').unbind('focusin');
+
+					$input = $('textarea[name=description]');
+					if(data.description != undefined && ($input.hasClass('clear-default') || $input.attr('value').length == 0))
+						$input.attr('value', data.description).removeClass('clear-default').unbind('focusin');
+
+
+				}, 'json');
+
+				$(e.target).addClass('icon').addClass('load');
+			});
+
 		});
 	</script>
 </%def>
