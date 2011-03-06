@@ -73,7 +73,7 @@ class Link(Object, Callable):
 
 	# /!\ GET cannot have a specific content type (global to the object)
 	@callback(url='/{id:\d+}', content_type='text/html', modifiers={'text/html': self.html_GET})
-	def GET(self, id, __referer__=None):
+	def GET(self, id, __referer__=None, **kwargs):
 		link = list(filter(lambda x: x.id == id, Link))
 		if len(link) == 0:
 			return routing.HTTP_404("%s link not found" % id)
