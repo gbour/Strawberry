@@ -2,7 +2,15 @@
 A. BUGS
  X crash if using utf8 characters in name a/o tags (wikipædia)
  . search function do not work (remove console.log() at first)
- . add/edit: once default value as been erased, do not clean when focus on
+ X add/edit: once default value as been erased, do not clean when focus on
+ . add/edit link: decode url encoded characters in metatags (title, description)
+ . link metadata: BeautifulSoup parsing errors:
+   . dafont.com (on title)
+   . http://www.numerama.com/ (parsing <script> error)
+   . http://www.guardian.co.uk/music/2008/oct/01/metallica.popandrock (parse error)
+   . http://en.wikipedia.org/wiki/Don%27t_repeat_yourself (403 forbidden)
+ . tag detail: add quotes ("") to related tag links with space ("loudness war")
+
 
 B. FEATURES
 X favicon
@@ -15,10 +23,13 @@ X favicon
 		NOTE: should be delete first only, not after
   - description: allow html/markdown/whatever syntax, formating helper
   - url: after entering url, query it
-    . onload animated picture
-    . set a warning if we can't retrieve url
-    . pre-fill name, description, tags fields with page meta-headers
-    . get/store site favicon
+    X onload animated picture
+    . set a warning if we can't retrieve url (manage metadata queries errors)
+    X pre-fill name, description, 
+    . suggest tags fields with page meta-headers
+    X get/store site favicon
+    . redisplay favicon when editing link
+    . if link name is too long un black title, reduce length with '...'
   X tags: sort alphabetically
   - tags: ajax field (see old version)
   - tags: when choosing tag, suggest others based on link relations
@@ -43,3 +54,7 @@ X favicon
 . get site preview image
 . search field may appear on all pages
 
+. add keyboard shortcuts:
+	ctrl+a : add new link
+  ctrl+e : edit current link
+  ctrl+c : tag cloud
