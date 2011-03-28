@@ -366,6 +366,11 @@ div#newlink ul#tags_list > li > input {
 	width: 100px;
 }
 
+div#newlink select {
+	min-height: 300px;
+	width: 408px;
+}
+
 div#newlink > form#main_form input[type="submit"] {
 /*	background-color: black;
 	color: white;*/
