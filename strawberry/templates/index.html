@@ -26,7 +26,7 @@
 
 <%def name="content()">
 	<div id="search">
-		<form action="#" base-acti .n="${url(strawberry.search, q=None)}" method="GET">
+		<form action="#" base-action="${url(strawberry.search, q=None)}" method="GET">
 			search: 
 			<input type="text" name="q"/>
 		</form>
@@ -58,11 +58,10 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 				$("#search form").submit(function(evt) {
-					console.log($(evt.target).attr('base-action'));
-					evt.target.action = $(evt.target).attr('base-action') + $("#search input:first").val();
-					$("#search input:first").val('');
-					$(evt.target).empty();
-					console.log(evt.target.action);
+					var t = $(evt.target);
+					t.attr('action', t.attr('base-action') + $("#search input:first").val());
+					t.empty();
+
 					return true;
 				});
 		});
