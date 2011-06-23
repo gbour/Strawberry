@@ -19,46 +19,76 @@ __license__ = """
 """
 import os, os.path
 
-from distutils.core                 import setup
-from distutils.command.install_lib  import install_lib
-from distutils.command.install_data import install_data
-from distutils.util                 import convert_path, change_root
+from setuptools                      import setup, Command
+from setuptools.command.install_lib  import install_lib
+from distutils.dir_util              import ensure_relative
+from distutils.util                  import convert_path, change_root
+from setuptools.dist                 import Distribution
+from setuptools.command.install      import install
 
-class _install_lib(install_lib):
-	def finalize_options(self):
-		"""Copy python files in Mother apps/ directory instead of standard python dirs
+class _Distribution(Distribution):
+	def __init__(self, *args, **kwargs):
+		# add new option for motherapps
+		self.motherapps = []
+
+		Distribution.__init__(self, *args, **kwargs)
+
+		# automatically install our install_lib version
+		if not 'install' in self.cmdclass:
+			self.cmdclass['install']= _install
+		if not 'install_lib' in self.cmdclass:
+			self.cmdclass['install_lib']= _install_lib
+
+	def has_pure_modules(self):
+		"""Ensure install_lib.run() is executed even if we have no python modules
 		"""
-		install_lib.finalize_options(self)
-		self.install_dir = os.path.join(self.get_finalized_command('bdist_dumb').bdist_dir, 'var/lib/mother/apps')
+		return True
 
 
-class _install_data(install_data):
-	"""Allow use of directories as data_file sources
-	"""
-	excludes = ['.svn']
+class _install(install):
+	def _fix_paths(self):
+		self.install_apps = self.install_base
+		# manage --prefix option (i.e is set when in an environment created with *virtualenv*)
+		if self.prefix_option is None and self.install_base == '/usr': # default prefix
+			# TODO: specific install paths may not be changes if explicitly specified by user on command line (--install-scripts and --install-data options)
+			(self.install_scripts, self.install_data, self.install_apps) = ('/usr/bin', '/', '/')
+
+		# manage --root option (is set when doing "setup.py bdist")
+		if self.root is not None:
+			for p in ('scripts','data','apps'):
+				setattr(self, 'install_'+p, os.path.join(self.root, ensure_relative(getattr(self, 'install_'+p))))
+		
+	def finalize_options(self):
+		install.finalize_options(self)
+		self._fix_paths()
 
 	def run(self):
-		self.mkpath(self.install_dir)
+		self._fix_paths()
+		install.run(self)
 
-		for f in self.data_files:
-			if not isinstance(f, (list, tuple)):
-				continue
 
-			dir = convert_path(f[0])
-			if not os.path.isabs(dir):
-				dir = os.path.join(self.install_dir, dir)
-			elif self.root:
-				dir = change_root(self.root, dir)
-			self.mkpath(dir)
+class _install_lib(install_lib):
+	excludes = ['.svn']
+	dest     = 'var/lib/mother/apps'
+	_pyfiles = []
 
-			for data in f[1]:
-				if os.path.isdir(data):
-					self.copy_tree(data, dir)
-					f[1].remove(data)
-					
-		install_data.run(self)
+	def run(self):
+		if self.dry_run or len(self.distribution.motherapps) == 0:
+			return
 
-	def copy_tree(self, src, dst):
+		inst = self.get_finalized_command('install')
+
+		for app in self.distribution.motherapps:
+			self._copy_tree(
+				os.path.join(*app.split('.')), 
+				os.path.join(inst.install_apps, self.dest)
+			)
+
+		self.byte_compile(self._pyfiles)
+		#do not copy webapp in python standard directory
+		#install_lib.run(self)
+
+	def _copy_tree(self, src, dst):
 		"""We replace Command.copy_tree() as we need to exclude .svn directories
 		"""	
 		_excl = list(self.excludes)
@@ -78,13 +108,18 @@ class _install_data(install_data):
 				else:
 					self.mkpath(os.path.join(_dst, d))
 
-			[self.copy_file(os.path.join(root, f), os.path.join(_dst, f)) for f in files if f not in _excl]
+			[self._copy_file(os.path.join(root, f), os.path.join(_dst, f)) for f in files if f not in _excl]
+
+	def _copy_file(self, src, dst):
+		install_lib.copy_file(self,src, dst)
+		if dst.endswith('.py'):
+			self._pyfiles.append(dst)
 
 
 setup(
 	name         = 'strawberry',
 	version      = '0.1.0',
-	description  = 'WebApp - Web links manager',
+	description  = 'WebApp - Web links bookmark',
 	author       = 'Guillaume Bour',
 	author_email = 'guillaume@bour.cc',
 	url          = 'http://devedge.bour.cc/wiki/Strawberry/',
@@ -108,16 +143,18 @@ setup(
 		'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
 	],
 
-	long_description = """""",
+	long_description = """Strawberry is a links bookmarking self-hosted service.
+		It allows you to store, manage, classify and consult your preferred links from
+		anywhere.
 
+		Strawberry is self-hosted, meaning you need a server to host your strawberry
+		instance.
+		Strawberry is written in python, as a *Mother* WebApp
+	""",
 
-	packages    = ['strawberry'],
-	data_files  = [('/var/lib/mother/apps/strawberry', ['strawberry/templates'])],
-	requires    = ['magic (>= 0.1)', 'mother (>= 0.1.0, < 0.2)'],
+	install_requires = ['magic >= 0.1', 'mother-webapps-framework >= 0.1.0, < 0.2'],
 
-	cmdclass    = {
-		'install_lib' : _install_lib,
-		'install_data': _install_data,
-	}
+	distclass   = _Distribution,
+	motherapps  = ['strawberry'],
 )
 
