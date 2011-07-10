@@ -118,7 +118,7 @@ class _install_lib(install_lib):
 
 setup(
 	name         = 'strawberry',
-	version      = '0.1.0',
+	version      = '3.0',
 	description  = 'WebApp - Web links bookmark',
 	author       = 'Guillaume Bour',
 	author_email = 'guillaume@bour.cc',
